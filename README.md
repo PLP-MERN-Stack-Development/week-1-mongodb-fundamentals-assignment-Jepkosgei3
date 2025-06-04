@@ -1,47 +1,197 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19702538&assignment_repo_type=AssignmentRepo)
 # MongoDB Fundamentals Assignment
 
-This assignment focuses on learning MongoDB fundamentals including setup, CRUD operations, advanced queries, aggregation pipelines, and indexing.
+## Overview
+This project demonstrates foundational MongoDB skills, including:
+- CRUD operations
+- Advanced queries
+- Aggregation pipelines
+- Indexing and performance analysis
 
-## Assignment Overview
+All tasks are performed using a sample `plp_bookstore` database.
 
-You will:
-1. Set up a MongoDB database
-2. Perform basic CRUD operations
-3. Write advanced queries with filtering, projection, and sorting
-4. Create aggregation pipelines for data analysis
-5. Implement indexing for performance optimization
+---
 
-## Getting Started
+## Prerequisites
 
-1. Accept the GitHub Classroom assignment invitation
-2. Clone your personal repository that was created by GitHub Classroom
-3. Install MongoDB locally or set up a MongoDB Atlas account
-4. Run the provided `insert_books.js` script to populate your database
-5. Complete the tasks in the assignment document
+- MongoDB (local installation or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
+- Node.js v16+ (recommended: v20)
+- `mongosh` (MongoDB shell)
 
-## Files Included
+---
 
-- `Week1-Assignment.md`: Detailed assignment instructions
-- `insert_books.js`: Script to populate your MongoDB database with sample book data
+## Setup Instructions
 
-## Requirements
+### Step 1: Insert Sample Data
 
-- Node.js (v18 or higher)
-- MongoDB (local installation or Atlas account)
-- MongoDB Shell (mongosh) or MongoDB Compass
+```bash
+mongosh insert_books.js
+````
 
-## Submission
+✅ This script will:
 
-Your work will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
+* Create the `plp_bookstore` database
+* Populate the `books` collection with sample data
+* Log all inserted documents
 
-1. Complete all tasks in the assignment
-2. Add your `queries.js` file with all required MongoDB queries
-3. Include a screenshot of your MongoDB database
-4. Update the README.md with your specific setup instructions
+### Step 2: Run Queries
 
-## Resources
+```bash
+mongosh < queries.js
+```
 
-- [MongoDB Documentation](https://docs.mongodb.com/)
-- [MongoDB University](https://university.mongodb.com/)
-- [MongoDB Node.js Driver](https://mongodb.github.io/node-mongodb-native/) 
+✅ This will:
+
+* Run all CRUD, advanced, and aggregation queries
+* Log results directly in the terminal
+
+---
+
+## 📝 Tasks Overview
+
+### ✅ Task 1: MongoDB Setup
+
+* Created `plp_bookstore` database
+* Inserted 12 sample book documents into `books` collection
+
+### ✅ Task 2: Basic CRUD Operations
+
+| Operation      | Example Command                                                           |
+| -------------- | ------------------------------------------------------------------------- |
+| Find by Genre  | `db.books.find({ genre: "Fiction" })`                                     |
+| Find by Year   | `db.books.find({ published_year: { $gt: 1950 } })`                        |
+| Find by Author | `db.books.find({ author: "J.R.R. Tolkien" })`                             |
+| Update Price   | `db.books.updateOne({ title: "The Hobbit" }, { $set: { price: 24.99 } })` |
+| Delete Book    | `db.books.deleteOne({ title: "1984" })`                                   |
+
+📸 Screenshots:
+
+* `findBooksByGenre.PNG`
+* `findBooksPublished1950.PNG`
+* `findBookByAuthor.PNG`
+* `findBookByTitle.PNG`
+* `deletedOne.PNG`
+
+### ✅ Task 3: Advanced Queries
+
+* Find books in stock after 2010
+* Projection (only title, author, price)
+* Sorting by price (asc/desc)
+* Pagination (5 books per page)
+
+### ✅ Task 4: Aggregation Pipelines
+
+* Average price by genre
+```bash
+db.books.aggregate([
+  {
+    $group: {
+      _id: "$genre",
+      averagePrice: { $avg: "$price" }
+    }
+  },
+  {
+    $sort: { averagePrice: -1 }
+  }
+])
+```
+* Author with most books
+```bash
+db.books.aggregate([
+  {
+    $group: {
+      _id: "$author",
+      count: { $sum: 1 }
+    }
+  },
+  {
+    $sort: { count: -1 }
+  },
+  {
+    $limit: 1
+  }
+])
+```
+* Group by publication decade
+```bash
+db.books.aggregate([
+  {
+    $project: {
+      title: 1,
+      decade: {
+        $concat: [
+          { $substr: [{ $multiply: [{ $floor: { $divide: ["$published_year", 10] } }, 10] }, 0, 4] },
+          "s"
+        ]
+      }
+    }
+  },
+  {
+    $group: {
+      _id: "$decade",
+      count: { $sum: 1 }
+    }
+  },
+  {
+    $sort: { _id: 1 }
+  }
+])
+
+```
+
+
+
+### ✅ Task 5: Indexing
+
+* Created single index: `title`
+```bash
+db.books.createIndex({ title: 1 })
+```
+* Created compound index: `{ author, published_year }`
+```bash
+db.books.createIndex({ author: 1, published_year: 1 })
+```
+* Used `.explain()` to demonstrate performance
+```bash
+db.books.find({ author: "J.R.R. Tolkien" }).explain()
+```
+
+---
+
+## 🔍 Verification
+
+To manually inspect the data:
+
+```bash
+mongosh
+use plp_bookstore
+db.books.find().pretty()
+```
+
+---
+
+## ✅ Assignment Checklist
+
+* [x] MongoDB setup and data insertion
+* [x] Basic CRUD operations
+* [x] Advanced queries with projection/sorting
+* [x] Aggregation pipelines
+* [x] Index creation & performance comparison
+* [x] Documentation with screenshots
+
+---
+
+## ⚠️ Troubleshooting
+
+| Issue                 | Fix                                                   |
+| --------------------- | ----------------------------------------------------- |
+| MongoDB not running   | Start MongoDB using `mongod`                          |
+| Node script fails     | Ensure you're using Node.js v16+                      |
+| Can't connect to DB   | Check the connection string in `insert_books.js`      |
+| Screenshots not found | Make sure they're placed in the `screenshots/` folder |
+
+---
+
+## 📄 License
+
+This project is submitted as part of the **PLP MERN Stack Development** coursework.
+
