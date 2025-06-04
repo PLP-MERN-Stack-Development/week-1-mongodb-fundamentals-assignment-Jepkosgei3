@@ -65,11 +65,11 @@ mongosh < queries.js
 
 📸 Screenshots:
 
-* ./findBooksByGenre.PNG
-* `findBooksPublished1950.PNG`
-* `findBookByAuthor.PNG`
-* `findBookByTitle.PNG`
-* `deletedOne.PNG`
+* ![Alt Text](./findBooksByGenre.PNG)
+* ![Alt Text](./findBooksPublished1950.PNG)
+* ![Alt Text](./findBookByAuthor.PNG)
+* ![Alt Text](./findBookByTitle.PNG)
+* ![Alt Text](./deletedOne.PNG)
 
 ### ✅ Task 3: Advanced Queries
 
