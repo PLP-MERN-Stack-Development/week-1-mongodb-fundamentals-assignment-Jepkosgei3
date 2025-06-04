@@ -65,7 +65,7 @@ mongosh < queries.js
 
 📸 Screenshots:
 
-* `findBooksByGenre.PNG`
+* ./findBooksByGenre.PNG
 * `findBooksPublished1950.PNG`
 * `findBookByAuthor.PNG`
 * `findBookByTitle.PNG`
